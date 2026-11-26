@@ -1,0 +1,28 @@
+services:
+  postgres: 
+    image: postgres:17-alpine
+    container_name: bearer-postgres
+    
+    environment:
+      POSTGRES_USER: bearer_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: bearer_db
+
+    ports:
+      - "5433:5432"
+
+    volumes:
+      - bearer_postgres_data:/var/lib/postgresql/data 
+
+    healthcheck:
+      test: 
+        - CMD-SHELL 
+        - pg_isready -U bearer_user -d bearer_db
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+
+volumes:
+  bearer_postgres_data:
